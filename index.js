@@ -32,8 +32,25 @@ app.get('/upload-file',(req,res)=>{
 //     res.send({ name, avatar })
 // })
 
+// app.post('/upload-file',(req,res)=>{
+//     upload.array('avatar',2)(req,res,err=>{
+//         if(err) 
+//             return res.render('form',{
+//                 error: err.message
+//             });
+//         const avatar = req.files
+//         const name = req.body.txtName;
+//         res.send({ name, avatar })
+//     })
+    
+// })
+
+const multi = upload.fields([
+    { name: 'hinhChinh'},
+    { name:'hinhPhu', maxCount:2}
+])
 app.post('/upload-file',(req,res)=>{
-    upload.array('avatar',2)(req,res,err=>{
+    multi(req,res,err=>{
         if(err) 
             return res.render('form',{
                 error: err.message
