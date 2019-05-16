@@ -1,7 +1,21 @@
 const express = require('express');
 const multer = require('multer');
+/**
+ * check file type
+ * check file size
+ * rename file
+ */
+const storage = multer.diskStorage({
+    destination: (req,file,cb)=>{
+        cb(null, 'public/images/')
+    },
+    filename: (req, file,cb)=>{
+        cb(null, Date.now()+'-'+file.originalname)
+    }
+})
 const upload = multer({ 
-    dest: 'public/images/'
+    // dest: 'public/images/'
+    storage 
 })
 const app = express();
 app.listen(3000)
