@@ -24,10 +24,18 @@ app.set('view engine', 'ejs');
 app.get('/upload-file',(req,res)=>{
     res.render('form');
 })
+// app.post('/upload-file',
+// upload.single('avatar'),
+// (req,res)=>{
+//     const avatar = req.file
+//     const name = req.body.txtName;
+//     res.send({ name, avatar })
+// })
+
 app.post('/upload-file',
-upload.single('avatar'),
+upload.array('avatar',2),
 (req,res)=>{
-    const avatar = req.file
+    const avatar = req.files
     const name = req.body.txtName;
     res.send({ name, avatar })
 })
