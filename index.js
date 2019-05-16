@@ -22,7 +22,7 @@ app.listen(3000)
 app.set('view engine', 'ejs');
 
 app.get('/upload-file',(req,res)=>{
-    res.render('form');
+    res.render('form',{error: null});
 })
 // app.post('/upload-file',
 // upload.single('avatar'),
@@ -32,10 +32,15 @@ app.get('/upload-file',(req,res)=>{
 //     res.send({ name, avatar })
 // })
 
-app.post('/upload-file',
-upload.array('avatar',2),
-(req,res)=>{
-    const avatar = req.files
-    const name = req.body.txtName;
-    res.send({ name, avatar })
+app.post('/upload-file',(req,res)=>{
+    upload.array('avatar',2)(req,res,err=>{
+        if(err) 
+            return res.render('form',{
+                error: err.message
+            });
+        const avatar = req.files
+        const name = req.body.txtName;
+        res.send({ name, avatar })
+    })
+    
 })
