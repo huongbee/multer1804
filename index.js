@@ -1,11 +1,15 @@
 const express = require('express');
 const upload = require('./lib/upload.config');
 const app = express();
+app.use(express.static('public/'))
 const port = process.env.PORT || 3000;
 app.listen(port)
 
 app.set('view engine', 'ejs');
 
+app.get('/',(req,res)=>{
+    res.render('home');
+})
 app.get('/upload-file',(req,res)=>{
     res.render('form',{error: null});
 })
