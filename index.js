@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
         cb(null, Date.now()+'-'+file.originalname)
     }
 })
-//
+
 function fileFilter(req, file, cb){
     if(file.mimetype == 'image/png' || file.mimetype == 'image/jpeg' || file.mimetype == 'image/gif')
         return cb(null, true);
@@ -22,7 +22,8 @@ function fileFilter(req, file, cb){
 const upload = multer({ 
     // dest: 'public/images/'
     storage ,
-    fileFilter
+    fileFilter,
+    limits: { fileSize: 1024*1024} // 1MB
 })
 const app = express();
 app.listen(3000)
@@ -31,12 +32,12 @@ app.set('view engine', 'ejs');
 app.get('/upload-file',(req,res)=>{
     res.render('form',{error: null});
 })
-app.post('/upload-file',
-upload.single('avatar'),
-(req,res)=>{
-    const avatar = req.file
-    const name = req.body.txtName;
-    res.send({ name, avatar })
+app.post('/upload-file',(req,res)=>{
+    upload.single('avatar')(req, res, err=>{
+        if(err) return res.send({err: err.message}) 
+        const avatar = req.file
+        res.send({ avatar })
+    })
 })
 
 // app.post('/upload-file',(req,res)=>{
