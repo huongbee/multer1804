@@ -13,9 +13,16 @@ const storage = multer.diskStorage({
         cb(null, Date.now()+'-'+file.originalname)
     }
 })
+//
+function fileFilter(req, file, cb){
+    if(file.mimetype == 'image/png' || file.mimetype == 'image/jpeg' || file.mimetype == 'image/gif')
+        return cb(null, true);
+    return cb(new Error('File not allow!'));
+}
 const upload = multer({ 
     // dest: 'public/images/'
-    storage 
+    storage ,
+    fileFilter
 })
 const app = express();
 app.listen(3000)
@@ -24,13 +31,13 @@ app.set('view engine', 'ejs');
 app.get('/upload-file',(req,res)=>{
     res.render('form',{error: null});
 })
-// app.post('/upload-file',
-// upload.single('avatar'),
-// (req,res)=>{
-//     const avatar = req.file
-//     const name = req.body.txtName;
-//     res.send({ name, avatar })
-// })
+app.post('/upload-file',
+upload.single('avatar'),
+(req,res)=>{
+    const avatar = req.file
+    const name = req.body.txtName;
+    res.send({ name, avatar })
+})
 
 // app.post('/upload-file',(req,res)=>{
 //     upload.array('avatar',2)(req,res,err=>{
@@ -45,19 +52,19 @@ app.get('/upload-file',(req,res)=>{
     
 // })
 
-const multi = upload.fields([
-    { name: 'hinhChinh'},
-    { name:'hinhPhu', maxCount:2}
-])
-app.post('/upload-file',(req,res)=>{
-    multi(req,res,err=>{
-        if(err) 
-            return res.render('form',{
-                error: err.message
-            });
-        const avatar = req.files
-        const name = req.body.txtName;
-        res.send({ name, avatar })
-    })
+// const multi = upload.fields([
+//     { name: 'hinhChinh'},
+//     { name:'hinhPhu', maxCount:2}
+// ])
+// app.post('/upload-file',(req,res)=>{
+//     multi(req,res,err=>{
+//         if(err) 
+//             return res.render('form',{
+//                 error: err.message
+//             });
+//         const avatar = req.files
+//         const name = req.body.txtName;
+//         res.send({ name, avatar })
+//     })
     
-})
+// })
