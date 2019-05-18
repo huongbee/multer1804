@@ -1,30 +1,5 @@
 const express = require('express');
-const multer = require('multer');
-/**
- * check file type
- * check file size
- * rename file
- */
-const storage = multer.diskStorage({
-    destination: (req,file,cb)=>{
-        cb(null, 'public/images/')
-    },
-    filename: (req, file,cb)=>{
-        cb(null, Date.now()+'-'+file.originalname)
-    }
-})
-
-function fileFilter(req, file, cb){
-    if(file.mimetype == 'image/png' || file.mimetype == 'image/jpeg' || file.mimetype == 'image/gif')
-        return cb(null, true);
-    return cb(new Error('File not allow!'));
-}
-const upload = multer({ 
-    // dest: 'public/images/'
-    storage ,
-    fileFilter,
-    limits: { fileSize: 1024*1024} // 1MB
-})
+const upload = require('./lib/upload.config');
 const app = express();
 app.listen(3000)
 app.set('view engine', 'ejs');
